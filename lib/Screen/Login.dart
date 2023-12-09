@@ -1,187 +1,122 @@
-import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:my_flutter_app/Screen/HomePage.dart';
-import 'package:my_flutter_app/main.dart';
+import 'package:my_flutter_app/Screen/Register.dart';
+
+void main() {
+  runApp(Login());
+}
 
 class Login extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  Future<void> loginUser(BuildContext context) async {
-    final response = await http.post(
-      Uri.parse(
-          'https://your-api-endpoint/api/auth/login'), // Replace with your API endpoint
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'username': emailController.text,
-        'password': passwordController.text,
-      }),
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Sign In Page',
+      home: LoginPage(),
     );
+  }
+}
 
-    if (response.statusCode == 200) {
-      // Successful login, extract token from the response
-      final Map<String, dynamic> data = json.decode(response.body);
-      final String token = data['Token'];
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
-      // Navigate to the HomePage
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(token: token)),
-      );
-    } else {
-      // Failed login, handle the error (show a message, etc.)
-      print('Failed to log in: ${response.statusCode}');
-      // Display an error message to the user
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Login Failed'),
-            content: Text('Invalid credentials. Please try again.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String selectedValue = 'Level1';
+  String selectedValue2 = 'General';
+  InputDecoration buildTextFieldDecoration(String labelText) {
+    return InputDecoration(
+      labelText: labelText,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: const BorderSide(color: const Color(0xffafd1e7)),
+      ),
+      filled: true,
+      fillColor: Colors.white,
+      alignLabelWithHint: true, // Align label with hint text
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF53A3FA),
+      backgroundColor: const Color.fromRGBO(83, 163, 250, 1),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(32),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Welcome back!",
-                style: TextStyle(
-                  fontSize: 28,
+                'Welcome Back!',
+                style: const TextStyle(
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 10),
-              Text(
-                "This is the page to sign in to your account",
+              const SizedBox(height: 10),
+              const Text(
+                'This is the page to sign in to your account',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 20),
-              // Email field
+              const SizedBox(height: 16),
+              TextField(
+                decoration: buildTextFieldDecoration('E-mail'),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                obscureText: true,
+                decoration: buildTextFieldDecoration('Password'),
+              ),
+              const SizedBox(height: 20),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Email',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  Container(
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Navigate to the main screen when the user logs in
+                      },
+                      child: const Text(
+                        'Sign in',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: const Color(0xff0479db),
+                        onPrimary: Colors.white,
+                        elevation: 5,
+                        padding: const EdgeInsets.all(15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 5),
-                  TextFormField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your email',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Register(), // Replace NextPage with your desired page
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Don\'t  have an account? Sign up Here',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
-              ),
-              SizedBox(height: 10),
-              // Password field
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Password',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  TextFormField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your password',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.visibility),
-                        onPressed: () {
-                          // Implement logic to toggle password visibility
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              // Sign In button
-              SizedBox(
-                width: 150,
-                child: ElevatedButton(
-                  onPressed: () => loginUser(context),
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF006DEE),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      'Sign In',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              // Sign Up link
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/signup');
-                },
-                child: Text(
-                  "Don't have an account? Sign up",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
               ),
             ],
           ),

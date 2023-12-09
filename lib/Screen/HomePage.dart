@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:home_page/course.dart';
-import 'package:home_page/profile.dart';
+import 'package:my_flutter_app/Screen/course.dart';
 
 void main() {
   runApp(const Home());
