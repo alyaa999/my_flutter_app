@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:home_page/course.dart';
 import 'package:home_page/profile.dart';
 
-void main() {//comment 
+void main() {
   runApp(const Home());
 }
 
