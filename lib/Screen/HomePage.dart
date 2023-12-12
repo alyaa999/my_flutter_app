@@ -1,283 +1,132 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/Screen/course.dart';
-
-void main() {
-  runApp(const Home());
-}
+import 'package:http/http.dart' as http;
+import 'package:my_flutter_app/Screen/Course.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final String token;
+
+  final String username;
+
+  const Home(
+      {required this.token,
+      required this.username, // Add this line to receive the username
+      Key? key})
+      : super(key: key);
 
   @override
-  State<Home> createState() => _Homestate();
+  State<Home> createState() => _Homestate(token: token, username: username);
 }
 
 class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  TextEditingController _searchController = TextEditingController();
+
+  final String token;
+
+  final String username;
+
+  _Homestate({required this.token, required this.username});
+
+  List<CourseData> courses = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(
-        length: 8, vsync: this); // Replace 3 with the number of tabs you want
+      length: 8,
+      vsync: this,
+    );
+    _fetchAllCourses();
   }
 
-  List all = [
-    {
-      "image": "images/math.png",
-      'title': 'all',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
+  Future<void> _fetchAllCourses() async {
+    final String apiUrl =
+        "https://localhost:7176/api/Course/GetAll"; // Replace with your actual API endpoint
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> coursesData = jsonDecode(response.body);
+      setState(() {
+        courses = coursesData.map((data) => CourseData.fromJson(data)).toList();
+      });
+    } else {
+      print("Failed to load courses: ${response.statusCode}");
     }
-  ];
-  List general = [
-    {
-      "image": "images/math.png",
-      'title': 'general',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
+  }
+
+  Future<void> _fetchCoursesByDepartment(int department) async {
+    try {
+      final String apiUrl =
+          "https://localhost:7176/api/Course/FilterByDeptarment?department=$department";
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> coursesData = jsonDecode(response.body);
+        setState(() {
+          courses =
+              coursesData.map((data) => CourseData.fromJson(data)).toList();
+        });
+      } else {
+        print("Failed to load courses by department: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching courses by department: $error");
     }
-  ];
-  List cs = [
-    {
-      "image": "images/math.png",
-      'title': 'cs',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
+  }
+
+  Future<void> _fetchCoursesByLevel(int level) async {
+    try {
+      final String apiUrl =
+          "https://localhost:7176/api/Course/FilterByLevel?level=$level";
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> coursesData = jsonDecode(response.body);
+        setState(() {
+          courses =
+              coursesData.map((data) => CourseData.fromJson(data)).toList();
+        });
+      } else {
+        print("Failed to load courses by department: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching courses by department: $error");
     }
-  ];
-  List it = [
-    {
-      "image": "images/math.png",
-      'title': 'it',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
+  }
+
+  Future<void> _searchCourses(String searchTerm) async {
+    try {
+      final String apiUrl =
+          "https://localhost:7176/api/Course/Search?title=$searchTerm";
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> coursesData = jsonDecode(response.body);
+        setState(() {
+          courses =
+              coursesData.map((data) => CourseData.fromJson(data)).toList();
+        });
+      } else {
+        print("Failed to load courses by search: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching courses by search: $error");
     }
-  ];
-  List level1 = [
-    {
-      "image": "images/math.png",
-      'title': 'level1',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    }
-  ];
-  List level2 = [
-    {
-      "image": "images/math.png",
-      'title': 'level2',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    }
-  ];
-  List level3 = [
-    {
-      "image": "images/math.png",
-      'title': 'level3',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    }
-  ];
-  List level4 = [
-    {
-      "image": "images/math.png",
-      'title': 'level4',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    },
-    {
-      "image": "images/math.png",
-      'title': 'math',
-      'subtitle': 'its a mathematical course'
-    }
-  ];
+  }
+
   int _currentIndex = 0;
 
   void _onTabTapped(int index) {
@@ -296,12 +145,12 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
             children: [
               Container(
                   margin: const EdgeInsets.all(10),
-                  child: const Card(
+                  child: Card(
                     elevation: 0.0,
                     child: ListTile(
-                      title: Text("Good morning"),
+                      title: Text("Good morning,"),
                       subtitle: Text(
-                        "shimaa",
+                        username, // Set username
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.black),
                       ),
@@ -315,13 +164,20 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
               Container(
                 height: 45,
                 width: 350,
-                child: const TextField(
+                child: TextField(
+                  controller:
+                      _searchController, // Assign the controller to the TextField
+
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(7))),
                     hintText: "search",
                     suffixIcon: Icon(Icons.search_outlined),
                   ),
+                  onSubmitted: (String searchTerm) {
+                    // Call the search API when Enter is pressed
+                    _searchCourses(searchTerm);
+                  },
                 ),
               ),
               Container(
@@ -348,436 +204,161 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
                   Tab(text: 'Level 3'),
                   Tab(text: 'Level 4'),
                 ],
+                onTap: (index) {
+                  switch (index) {
+                    case 0:
+                      _fetchAllCourses(); // Fetch all courses
+                      break;
+                    case 1:
+                      _fetchCoursesByDepartment(1);
+                      break;
+                    case 2:
+                      _fetchCoursesByDepartment(2);
+                      break;
+                    case 3:
+                      _fetchCoursesByDepartment(3);
+                      break;
+                    case 4:
+                      _fetchCoursesByLevel(1);
+                      break;
+                    case 5:
+                      _fetchCoursesByLevel(2);
+                      break;
+                    case 6:
+                      _fetchCoursesByLevel(3);
+                      break;
+                    case 7:
+                      _fetchCoursesByLevel(4);
+                      break;
+                  }
+                },
               ),
               Container(
                 height: 25,
               ),
+
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 30),
                   child: TabBarView(
                     controller: _tabController,
                     children: [
-                      // Replace these with your tab contents
+// Inside your GridView.builder
                       GridView.builder(
                         shrinkWrap: true,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, mainAxisExtent: 230),
-                        itemCount: all.length,
+                          crossAxisCount:
+                              2, // Set the cross-axis count to 3 for three items in each row
+                          crossAxisSpacing:
+                              10, // Adjust the spacing between items horizontally
+                          mainAxisSpacing:
+                              10, // Adjust the spacing between items vertically
+                          mainAxisExtent:
+                              200, // Set the main axis extent to control the height of each item
+                        ),
+                        itemCount: courses.length,
                         itemBuilder: (context, index) {
-                          return (InkWell(
-                              onTap: () {
-                                // Navigate to the second page on tap
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Course()));
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 300,
-                                      child: Image.asset(
-                                        all[index]['image'],
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Text(
-                                        all[index]['title'],
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        all[index]['subtitle'],
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                          return InkWell(
+                            onTap: () {
+                              // Navigate to the course details page on tap
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Course(
+                                    Id: courses[index].id.toString(),
+                                  ),
                                 ),
-                              )));
-                        },
-                      ),
-
-                      GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, mainAxisExtent: 230),
-                        itemCount: general.length,
-                        itemBuilder: (context, index) {
-                          return (InkWell(
-                              onTap: () {
-                                // Navigate to the second page on tap
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Course()));
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 300,
-                                      child: Image.asset(
-                                        general[index]['image'],
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
+                              );
+                            },
+                            child: Card(
+                              elevation: 4.0,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: double
+                                        .infinity, // Make the image take the full width
+                                    height:
+                                        100, // Set a fixed height for the image
+                                    child: Image.asset(
+                                      courses[index].image ??
+                                          'assets/images/XDP.jpeg',
+                                      fit: BoxFit
+                                          .cover, // Ensure the image covers the entire container
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        // Provide a default/fallback image in case of an error
+                                        return Image.asset(
+                                          'assets/images/XDP.jpeg',
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
                                     ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Text(
-                                        general[index]['title'],
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          8), // Add some spacing between the image and text
+                                  Text(
+                                    courses[index].title,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        general[index]['subtitle'],
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                        ),
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          4), // Add some spacing between the title and description
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: Text(
+                                      courses[index].courseCode,
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
                                       ),
+                                      textAlign: TextAlign
+                                          .center, // Center the description text
                                     ),
-                                  ],
-                                ),
-                              )));
-                        },
-                      ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, mainAxisExtent: 230),
-                        itemCount: cs.length,
-                        itemBuilder: (context, index) {
-                          return (InkWell(
-                              onTap: () {
-                                // Navigate to the second page on tap
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Course()));
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 300,
-                                      child: Image.asset(
-                                        cs[index]['image'],
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Text(
-                                        cs[index]['title'],
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        cs[index]['subtitle'],
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )));
-                        },
-                      ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, mainAxisExtent: 230),
-                        itemCount: it.length,
-                        itemBuilder: (context, index) {
-                          return (InkWell(
-                              onTap: () {
-                                // Navigate to the second page on tap
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Course()));
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 300,
-                                      child: Image.asset(
-                                        it[index]['image'],
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Text(
-                                        it[index]['title'],
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        it[index]['subtitle'],
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )));
-                        },
-                      ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, mainAxisExtent: 230),
-                        itemCount: level1.length,
-                        itemBuilder: (context, index) {
-                          return (InkWell(
-                              onTap: () {
-                                // Navigate to the second page on tap
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Course()));
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 300,
-                                      child: Image.asset(
-                                        level1[index]['image'],
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Text(
-                                        level1[index]['title'],
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        level1[index]['subtitle'],
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )));
-                        },
-                      ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, mainAxisExtent: 230),
-                        itemCount: level2.length,
-                        itemBuilder: (context, index) {
-                          return (InkWell(
-                              onTap: () {
-                                // Navigate to the second page on tap
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Course()));
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 300,
-                                      child: Image.asset(
-                                        level2[index]['image'],
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        level2[index]['title'],
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        level2[index]['subtitle'],
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )));
-                        },
-                      ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, mainAxisExtent: 230),
-                        itemCount: level3.length,
-                        itemBuilder: (context, index) {
-                          return (InkWell(
-                              onTap: () {
-                                // Navigate to the second page on tap
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Course()));
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 300,
-                                      child: Image.asset(
-                                        level3[index]['image'],
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        level3[index]['title'],
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        level3[index]['subtitle'],
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )));
-                        },
-                      ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, mainAxisExtent: 230),
-                        itemCount: level4.length,
-                        itemBuilder: (context, index) {
-                          return (InkWell(
-                              onTap: () {
-                                // Navigate to the second page on tap
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Course()));
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 300,
-                                      child: Image.asset(
-                                        level4[index]['image'],
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        level4[index]['title'],
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        level4[index]['subtitle'],
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )));
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
                       ),
                     ],
                   ),
                 ),
               ),
-              BottomNavigationBar(
-                  currentIndex: _currentIndex,
-                  onTap: _onTabTapped,
-                  items: [
-                    const BottomNavigationBarItem(
-                      icon: Icon(Icons.home_outlined),
-                      label: 'Home',
-                    ),
-                    const BottomNavigationBarItem(
-                      icon: Icon(Icons.person_outline),
-                      label: 'Profile',
-                    ),
-                  ]),
+
+              // ... (rest of your code)
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class CourseData {
+  final int id;
+  final String title;
+  final String courseCode;
+  final String? image;
+
+  CourseData({
+    required this.id,
+    required this.title,
+    required this.courseCode,
+    this.image,
+  });
+
+  factory CourseData.fromJson(Map<String, dynamic> json) {
+    return CourseData(
+      id: json['id'],
+      title: json['title'],
+      courseCode: json['courseCode'],
+      image: json['image'],
     );
   }
 }

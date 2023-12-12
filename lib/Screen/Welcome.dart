@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/Screen/Login.dart';
 import 'package:my_flutter_app/Screen/Register.dart';
 
-void main() {
-  runApp(const Welcome());
-}
-
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
 
@@ -61,7 +57,7 @@ class ImageCenterPage extends StatelessWidget {
                 ),
                 child: Center(
                   child: Image.asset(
-                    'images/317.jpg', // Replace with the path to your image asset
+                    'assets/images/317.jpg', // Replace with the path to your image asset
                     width: 362, // Set the width of the image
                     height: 257, // Set the height of the image
                   ),

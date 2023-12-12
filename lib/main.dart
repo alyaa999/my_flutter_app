@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/Screen/HomePage.dart';
 import 'package:my_flutter_app/Screen/Login.dart';
+import 'package:my_flutter_app/Screen/MaterialUpload.dart';
 import 'package:my_flutter_app/Screen/Register.dart';
-import 'package:my_flutter_app/Screen/SignUp.dart';
 import 'package:my_flutter_app/Screen/Welcome.dart';
+import 'package:my_flutter_app/Screen/course.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,10 +19,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Signin(),
+      home: Home(
+        token: '',
+        username: '',
+      ),
       routes: {
         '/login': (context) => Login(),
-        '/homepage': (context) => Home(),
+        '/homepage': (contsext) => Home(
+              token: '',
+              username: '',
+            ),
         '/Register': (context) => Register(),
       },
     );

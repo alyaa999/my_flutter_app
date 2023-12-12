@@ -1,11 +1,9 @@
 import 'dart:ui';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:my_flutter_app/Screen/HomePage.dart';
 import 'package:my_flutter_app/Screen/Register.dart';
-
-void main() {
-  runApp(Login());
-}
 
 class Login extends StatelessWidget {
   @override
@@ -26,6 +24,56 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController UsernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  // API endpoint for authentication
+  static const String authApiUrl =
+      "https://localhost:7176/api/Account/Login"; // Replace with your actual API endpoint
+
+  Future<void> _signIn() async {
+    final String Username = UsernameController.text;
+    final String password = passwordController.text;
+
+    try {
+      final response = await http.post(
+        Uri.parse(authApiUrl),
+        body: jsonEncode({'Username': Username, 'Password': password}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        // Authentication successful, extract and store the token
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String token = responseData['token'];
+        final String Username = responseData['username'];
+        print(token);
+
+        // Save the token for future authenticated requests (you can use a secure storage solution)
+        // For simplicity, we're using shared preferences in this example
+        // Replace this with a more secure storage solution in a production environment
+        // Example using shared_preferences package:
+        // await SharedPreferences.getInstance().then((prefs) => prefs.setString('token', token));
+
+        // Navigate to the home page
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => Home(
+              token: token,
+              username: Username,
+            ), // Pass the token to the home page
+          ),
+        );
+      } else {
+        // Handle authentication error, show a message or perform any other action
+        print("Authentication failed: ${response.statusCode}");
+      }
+    } catch (error) {
+      // Handle network or other errors
+      print("Error: $error");
+    }
+  }
+
   String selectedValue = 'Level1';
   String selectedValue2 = 'General';
   InputDecoration buildTextFieldDecoration(String labelText) {
@@ -70,11 +118,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
               TextField(
-                decoration: buildTextFieldDecoration('E-mail'),
+                controller:
+                    UsernameController, // Add this line to bind the controller
+
+                decoration: buildTextFieldDecoration('Username'),
               ),
               const SizedBox(height: 16),
               TextField(
                 obscureText: true,
+                controller:
+                    passwordController, // Add this line to bind the controller
+
                 decoration: buildTextFieldDecoration('Password'),
               ),
               const SizedBox(height: 20),
@@ -84,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigate to the main screen when the user logs in
+                        _signIn();
                       },
                       child: const Text(
                         'Sign in',

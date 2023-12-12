@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/Screen/Login.dart';
 
-void main() {
-  runApp(Register());
-}
-
 class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
