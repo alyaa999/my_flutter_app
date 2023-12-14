@@ -4,15 +4,20 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Course extends StatefulWidget {
-  Course({Key? key, required this.Id}) : super(key: key);
+  Course({Key? key, required this.Id, required this.username})
+      : super(key: key);
 
   final int Id;
+  final String username;
 
   @override
   _CourseState createState() => _CourseState();
 }
 
 class _CourseState extends State<Course> {
+  ValueNotifier<bool> isItemAdded = ValueNotifier<bool>(false);
+  ValueNotifier<String> buttonText = ValueNotifier<String>('Add to favorites');
+
   late CourseData course = CourseData(
     id: 0,
     title: '',
@@ -31,6 +36,7 @@ class _CourseState extends State<Course> {
     super.initState();
     _fetchCoursesById(widget.Id as int);
     _fetchMaterialsNumbers(widget.Id as int);
+    _IsFavourite(widget.Id as int, widget.username as String);
   }
 
   Future<void> _fetchCoursesById(int id) async {
@@ -48,10 +54,61 @@ class _CourseState extends State<Course> {
           course = CourseData.fromJson(courseData);
         });
       } else {
-        print("Failed to load course by id: ${response.statusCode}");
+        print("Failed to load course by id: ${response.body}");
       }
     } catch (error) {
       print("Error fetching course by id: $error");
+    }
+  }
+
+  Future<void> _clickOnFavourite(int id, String username) async {
+    try {
+      final String apiUrl =
+          "https://localhost:7176/api/Student/ClickOnEnroll?userName=$username&courseId=$id";
+
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer YOUR_TOKEN_HERE'},
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          isItemAdded.value = response.body.toLowerCase() == 'true';
+        });
+      } else {
+        print('Failed to fetch bool value. Status code: ${response.body}');
+        // Handle the error, you might want to throw an exception or show a user-friendly message.
+      }
+    } catch (error) {
+      print('Error fetching bool value: $error');
+      // Handle the error, you might want to throw an exception or show a user-friendly message.
+    }
+  }
+
+  Future<void> _IsFavourite(int id, String username) async {
+    try {
+      final String apiUrl =
+          "https://localhost:7176/api/Student/IsFavourite?userName=$username&courseId=$id";
+
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer YOUR_TOKEN_HERE'},
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          isItemAdded.value = response.body.toLowerCase() == 'true';
+          isItemAdded.value
+              ? buttonText.value = 'Remove From Favorites '
+              : 'Add to favorites';
+        });
+      } else {
+        print('Failed to fetch bool value. Status code: ${response.body}');
+        // Handle the error, you might want to throw an exception or show a user-friendly message.
+      }
+    } catch (error) {
+      print('Error fetching bool value: $error');
+      // Handle the error, you might want to throw an exception or show a user-friendly message.
     }
   }
 
@@ -156,13 +213,39 @@ class _CourseState extends State<Course> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _clickOnFavourite(widget.Id, widget.username);
+
+                              isItemAdded.value = !isItemAdded.value;
+                              buttonText.value = isItemAdded.value
+                                  ? 'Remove From Favorites '
+                                  : 'Add To Favorites';
+
+                              // Handle button press when item is not added
+                              print('Button Pressed');
+                              // Add your logic here to mark the item as added
+                            },
                             child: Center(
                               child: Row(
                                 children: [
-                                  Icon(Icons.add),
+                                  ValueListenableBuilder<bool>(
+                                    valueListenable: isItemAdded,
+                                    builder: (context, value, child) {
+                                      return value
+                                          ? Icon(Icons
+                                              .delete) // Change the icon when item is added
+                                          : Icon(Icons.add_circle);
+                                    },
+                                  ),
                                   SizedBox(width: 10),
-                                  Text('Enroll To The Course'),
+                                  ValueListenableBuilder<String>(
+                                    valueListenable: buttonText,
+                                    builder: (context, value, child) {
+                                      return Text(
+                                        value,
+                                      );
+                                    },
+                                  ),
                                 ],
                               ),
                             ),

@@ -266,6 +266,7 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
                                 MaterialPageRoute(
                                   builder: (context) => Course(
                                     Id: courses[index].id,
+                                    username: username,
                                   ),
                                 ),
                               );

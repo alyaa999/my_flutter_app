@@ -19,10 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Home(
-        token: '',
-        username: '',
-      ),
+      home: Login(),
       routes: {
         '/login': (context) => Login(),
         '/homepage': (contsext) => Home(
