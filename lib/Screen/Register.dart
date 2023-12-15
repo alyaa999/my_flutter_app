@@ -68,54 +68,74 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Future<void> _register() async {
-    try {
-      final String apiUrl = "https://localhost:7176/api/Account/Register";
-      int selectedValueLevel = 1;
-      int selectedValueDepartment = 0;
-      if (selectedValue == 'Level1') {
-        selectedValueLevel = 1;
-      } else if (selectedValue == 'Level2') {
-        selectedValueLevel = 2;
-      } else if (selectedValue == 'level3') {
-        selectedValueLevel = 3;
-      } else if (selectedValue == 'level4') {
-        selectedValueLevel = 4;
-      }
+    final String apiUrl = "https://localhost:7176/api/Account/Register";
+    int selectedValueLevel = 1;
+    int selectedValueDepartment = 0;
+    if (selectedValue == 'Level1') {
+      selectedValueLevel = 1;
+    } else if (selectedValue == 'Level2') {
+      selectedValueLevel = 2;
+    } else if (selectedValue == 'level3') {
+      selectedValueLevel = 3;
+    } else if (selectedValue == 'level4') {
+      selectedValueLevel = 4;
+    }
 
-      if (selectedValue2 == 'General') {
-        selectedValueDepartment = 1;
-      } else if (selectedValue2 == 'Cs') {
-        selectedValueDepartment = 2;
-      } else if (selectedValue2 == 'It') {
-        selectedValueDepartment = 3;
-      }
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Content-Type': 'application/json'
-        }, // Set the Content-Type header
-        body: jsonEncode({
-          'username': nameController.text,
-          'email': emailController.text,
-          'password': passwordController.text,
-          'confirmPassword': confirmPasswordController.text,
-          'level': selectedValueLevel.toString(),
-          'department': selectedValueDepartment.toString(),
-          'bio': '',
-        }),
+    if (selectedValue2 == 'General') {
+      selectedValueDepartment = 1;
+    } else if (selectedValue2 == 'Cs') {
+      selectedValueDepartment = 2;
+    } else if (selectedValue2 == 'It') {
+      selectedValueDepartment = 3;
+    }
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': nameController.text,
+        'email': emailController.text,
+        'password': passwordController.text,
+        'confirmPassword': confirmPasswordController.text,
+        'level': selectedValueLevel.toString(),
+        'department': selectedValueDepartment.toString(),
+        'bio': '',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Registration successful, navigate to the home page
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => Home(
+            token: '',
+            username: nameController.text,
+          ),
+        ),
+      );
+    } else {
+      // Display an error message to the user using AlertDialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Registration Failed'),
+            content: Text('${response.body} ,Please try again later.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
       );
 
-      if (response.statusCode == 200) {
-        // Registration successful, you may handle the response accordingly
-        var responseData = json.decode(response.body);
-        print('Registration successful: $responseData');
-      } else {
-        // Registration failed, handle the error
-        print('Failed to register. Status code: ${response.statusCode}');
-        print('Error message: ${response.body}');
-      }
-    } catch (error) {
-      print('Error during registration: $error');
+      // Registration failed, handle the error
+      print('Failed to register. Status code: ${response.statusCode}');
+      print('Error message: ${response.body}');
     }
   }
 
@@ -184,14 +204,6 @@ class _SignInPageState extends State<SignInPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         _register();
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => Home(
-                              token: '',
-                              username: nameController.text,
-                            ), // Replace NextPage with your desired page
-                          ),
-                        );
                       },
                       child: const Text(
                         'Sign up',
