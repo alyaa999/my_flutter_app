@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/Screen/HomePage.dart';
 import 'package:my_flutter_app/Screen/Login.dart';
 import 'package:my_flutter_app/Screen/MaterialUpload.dart';
+import 'package:my_flutter_app/Screen/Profile.dart';
 import 'package:my_flutter_app/Screen/Register.dart';
 import 'package:my_flutter_app/Screen/Welcome.dart';
 import 'package:my_flutter_app/Screen/course.dart';
@@ -19,12 +20,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Register(),
+      home: ProfilePage(
+        studentUsername: 'alyaa999',
+      ),
       routes: {
         '/login': (context) => Login(),
         '/homepage': (contsext) => Home(
               token: '',
-              username: '',
+              username: 'alyaa999',
             ),
         '/Register': (context) => Register(),
       },
