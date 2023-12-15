@@ -1,4 +1,8 @@
+import 'dart:convert'; // Import the dart:convert library for JSON encoding/decoding
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:my_flutter_app/Screen/HomePage.dart';
 import 'package:my_flutter_app/Screen/Login.dart';
 
 class Register extends StatelessWidget {
@@ -23,6 +27,11 @@ class _SignInPageState extends State<SignInPage> {
   String selectedValue = 'Level1';
   String selectedValue2 = 'General';
 
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
   InputDecoration buildTextFieldDecoration(String labelText) {
     return InputDecoration(
       labelText: labelText,
@@ -32,8 +41,82 @@ class _SignInPageState extends State<SignInPage> {
       ),
       filled: true,
       fillColor: Colors.white,
-      alignLabelWithHint: true, // Align label with hint text
+      alignLabelWithHint: true,
     );
+  }
+
+  Widget buildTextField(String label, TextEditingController controller) {
+    return TextField(
+      controller: controller,
+      decoration: buildTextFieldDecoration(label),
+    );
+  }
+
+  Widget buildDropdown(String value, List<String> items, String label,
+      Function(String?) onChanged) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      onChanged: onChanged,
+      items: ['  ', ...items].map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      decoration: buildTextFieldDecoration(label),
+    );
+  }
+
+  Future<void> _register() async {
+    try {
+      final String apiUrl = "https://localhost:7176/api/Account/Register";
+      int selectedValueLevel = 1;
+      int selectedValueDepartment = 0;
+      if (selectedValue == 'Level1') {
+        selectedValueLevel = 1;
+      } else if (selectedValue == 'Level2') {
+        selectedValueLevel = 2;
+      } else if (selectedValue == 'level3') {
+        selectedValueLevel = 3;
+      } else if (selectedValue == 'level4') {
+        selectedValueLevel = 4;
+      }
+
+      if (selectedValue2 == 'General') {
+        selectedValueDepartment = 1;
+      } else if (selectedValue2 == 'Cs') {
+        selectedValueDepartment = 2;
+      } else if (selectedValue2 == 'It') {
+        selectedValueDepartment = 3;
+      }
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json'
+        }, // Set the Content-Type header
+        body: jsonEncode({
+          'username': nameController.text,
+          'email': emailController.text,
+          'password': passwordController.text,
+          'confirmPassword': confirmPasswordController.text,
+          'level': selectedValueLevel.toString(),
+          'department': selectedValueDepartment.toString(),
+          'bio': '',
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Registration successful, you may handle the response accordingly
+        var responseData = json.decode(response.body);
+        print('Registration successful: $responseData');
+      } else {
+        // Registration failed, handle the error
+        print('Failed to register. Status code: ${response.statusCode}');
+        print('Error message: ${response.body}');
+      }
+    } catch (error) {
+      print('Error during registration: $error');
+    }
   }
 
   @override
@@ -64,60 +147,35 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
               const SizedBox(height: 35),
-              TextField(
-                decoration: buildTextFieldDecoration('Name'),
-              ),
+              buildTextField('Name', nameController),
               const SizedBox(height: 16),
-              TextField(
-                decoration: buildTextFieldDecoration('E-mail'),
-              ),
+              buildTextField('E-mail', emailController),
               const SizedBox(height: 16),
-              TextField(
-                obscureText: true,
-                decoration: buildTextFieldDecoration('Password'),
-              ),
+              buildTextField('Password', passwordController),
               const SizedBox(height: 16),
-              TextField(
-                decoration: buildTextFieldDecoration('Confirm Password'),
-              ),
+              buildTextField('Confirm Password', confirmPasswordController),
               const SizedBox(height: 15),
-              DropdownButtonFormField<String>(
-                value: selectedValue,
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    setState(() {
+              buildDropdown(
+                  selectedValue,
+                  ['Level1', 'Level2', 'Level3', 'Level4'],
+                  'Select your Level', (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    if (newValue == 'Level1') {
                       selectedValue = newValue;
-                    });
-                  }
-                },
-                items: <String>['  ', 'Level1', 'Level2', 'Level3', 'Level4']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: buildTextFieldDecoration('Select your Level'),
-              ),
+                    }
+                  });
+                }
+              }),
               const SizedBox(height: 15),
-              DropdownButtonFormField<String>(
-                value: selectedValue2,
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      selectedValue2 = newValue;
-                    });
-                  }
-                },
-                items: <String>['    ', 'General', 'Cs', 'It']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: buildTextFieldDecoration('Select your department'),
-              ),
+              buildDropdown(selectedValue2, ['General', 'Cs', 'It'],
+                  'Select your department', (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    selectedValue2 = newValue;
+                  });
+                }
+              }),
               const SizedBox(height: 20),
               Column(
                 children: [
@@ -125,7 +183,15 @@ class _SignInPageState extends State<SignInPage> {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Handle Sign Up logic
+                        _register();
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => Home(
+                              token: '',
+                              username: nameController.text,
+                            ), // Replace NextPage with your desired page
+                          ),
+                        );
                       },
                       child: const Text(
                         'Sign up',
