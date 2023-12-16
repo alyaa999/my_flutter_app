@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/Screen/HomePage.dart';
 import 'package:my_flutter_app/Screen/MaterialUpload.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:my_flutter_app/Screen/Profile.dart';
 
 class Course extends StatefulWidget {
   Course({Key? key, required this.Id, required this.username})
@@ -137,6 +139,7 @@ class _CourseState extends State<Course> {
 
   @override
   Widget build(BuildContext context) {
+    var _onTabTapped;
     return Scaffold(
       appBar: AppBar(
         title: Text(course.title), // change to title of course..
@@ -598,6 +601,34 @@ class _CourseState extends State<Course> {
                     ),
                   ],
                 ),
+              ),
+              BottomNavigationBar(
+                onTap: _onTabTapped,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                Home(username: widget.username, token: ''),
+                          ));
+                        },
+                        icon: const Icon(Icons.home)),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ProfilePage(
+                              studentUsername: widget.username,
+                            ),
+                          ));
+                        },
+                        icon: const Icon(Icons.person_outline)),
+                    label: 'Profile',
+                  ),
+                ],
               ),
             ],
           ),

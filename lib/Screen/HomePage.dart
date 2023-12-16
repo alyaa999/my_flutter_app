@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_flutter_app/Screen/Course.dart';
+import 'package:my_flutter_app/Screen/Profile.dart';
 
 class Home extends StatefulWidget {
   final String token;
@@ -236,7 +237,6 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
               Container(
                 height: 25,
               ),
-
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 30),
@@ -331,8 +331,34 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
                   ),
                 ),
               ),
-
-              // ... (rest of your code)
+              BottomNavigationBar(
+                onTap: _onTabTapped,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                Home(username: username, token: ''),
+                          ));
+                        },
+                        icon: const Icon(Icons.home)),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ProfilePage(
+                              studentUsername: username,
+                            ),
+                          ));
+                        },
+                        icon: const Icon(Icons.person_outline)),
+                    label: 'Profile',
+                  ),
+                ],
+              ),
             ],
           ),
         ),
