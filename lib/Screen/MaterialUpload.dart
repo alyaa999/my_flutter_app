@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_flutter_app/Screen/Profile.dart';
 
 class Upload extends StatefulWidget {
   final String username;
@@ -171,6 +172,12 @@ class _UploadState extends State<Upload> {
                       onPressed: () {
                         onPressed:
                         _createMaterial();
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProfilePage(studentUsername: widget.username),
+                          ),
+                        );
 
                         String textFieldValue1 = textController1.text;
                         String textFieldValue2 = textController2.text;

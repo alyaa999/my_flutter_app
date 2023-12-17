@@ -67,9 +67,28 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         // Handle authentication error, show a message or perform any other action
         print("Authentication failed: ${response.statusCode}");
+        // Display an error message to the user using AlertDialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Login Failed'),
+              content: Text('${response.body} ,Please try again later.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
     } catch (error) {
       // Handle network or other errors
+
       print("Error: $error");
     }
   }

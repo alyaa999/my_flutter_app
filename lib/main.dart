@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/Screen/FileListScreen.dart';
 import 'package:my_flutter_app/Screen/HomePage.dart';
 import 'package:my_flutter_app/Screen/Login.dart';
 import 'package:my_flutter_app/Screen/MaterialUpload.dart';
@@ -20,7 +21,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Login(),
+      home: FileListScreen(
+        courseId: 4,
+        type: 2,
+      ),
       routes: {
         '/login': (context) => Login(),
         '/homepage': (contsext) => Home(
@@ -75,7 +79,7 @@ class _ImageCenterPageState extends State<ImageCenterPage> {
                 ),
                 child: Center(
                   child: Image.asset(
-                    'images/StudyTeach2 1.png',
+                    'assets/images/StudyTeach2 1.png',
                     width: 362,
                     height: 257,
                   ),

@@ -282,7 +282,9 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MaterialUpload()),
+                              builder: (context) => Upload(
+                                    username: '',
+                                  )),
                         );
                       },
                       child: Card(
@@ -349,7 +351,9 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MaterialUpload()),
+                              builder: (context) => Upload(
+                                    username: '',
+                                  )),
                         );
                       },
                       child: Card(
@@ -415,7 +419,9 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MaterialUpload()),
+                              builder: (context) => Upload(
+                                    username: '',
+                                  )),
                         );
                       },
                       child: Card(
@@ -481,7 +487,9 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MaterialUpload()),
+                              builder: (context) => Upload(
+                                    username: '',
+                                  )),
                         );
                       },
                       child: Card(
@@ -547,7 +555,9 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MaterialUpload()),
+                              builder: (context) => Upload(
+                                    username: '',
+                                  )),
                         );
                       },
                       child: Card(

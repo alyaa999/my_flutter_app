@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:my_flutter_app/Screen/HomePage.dart';
+import 'package:my_flutter_app/Screen/course.dart';
 
 class CourseDetails {
   int? levelId;
@@ -114,19 +115,27 @@ class Student {
 
 class CourseCard extends StatelessWidget {
   final CourseDetails course;
-
-  CourseCard({required this.course});
+  final String username;
+  CourseCard({required this.course, required this.username});
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.only(bottom: 16.0),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(15.0),
       ),
       elevation: 4.0,
+      color: Colors.grey[200],
       child: InkWell(
         onTap: () {
-          // Add navigation or any action when the card is tapped
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => Course(
+                      Id: course.id,
+                      username: username,
+                    )),
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -298,7 +307,7 @@ class ProfilePage extends StatelessWidget {
       child: CircleAvatar(
         radius: 80.0,
         backgroundColor: Colors.transparent,
-        backgroundImage: AssetImage('assets/images/alyaa.jpg'),
+        backgroundImage: AssetImage('assets/images/user.png'),
       ),
     );
   }
@@ -380,7 +389,10 @@ class ProfilePage extends StatelessWidget {
             if (student.courses != null && student.courses.isNotEmpty)
               Column(
                 children: student.courses
-                    .map((course) => CourseCard(course: course))
+                    .map((course) => CourseCard(
+                          course: course,
+                          username: studentUsername,
+                        ))
                     .toList(),
               ),
           ],
