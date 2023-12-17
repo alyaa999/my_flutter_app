@@ -1,104 +1,232 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/Screen/Login.dart';
-import 'package:my_flutter_app/Screen/Register.dart';
+import 'package:http/http.dart' as http;
 
-class MaterialUpload extends StatelessWidget {
+class Upload extends StatefulWidget {
+  final String username;
+
+  const Upload({Key? key, required this.username}) : super(key: key);
+
+  @override
+  State<Upload> createState() => _UploadState();
+}
+
+class _UploadState extends State<Upload> {
+  final TextEditingController textController1 = TextEditingController();
+  final TextEditingController textController2 = TextEditingController();
+  String _selectedItem = 'Operating System';
+  List<String> _dropdownItems = [];
+
+  String _selectedItem2 = 'Slides';
+  List<CourseData> courses = [];
+  late Future<void> _fetchCoursesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCoursesFuture = _fetchAllCourses();
+  }
+
+  Future<void> _fetchAllCourses() async {
+    final String apiUrl =
+        "https://localhost:7176/api/Course/GetAll"; // Replace with your actual API endpoint
+    var token;
+    final response = await http.get(
+      Uri.parse(apiUrl),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> coursesData = jsonDecode(response.body);
+      setState(() {
+        courses = coursesData.map((data) => CourseData.fromJson(data)).toList();
+        _dropdownItems = courses.map((course) => course.title).toList();
+      });
+    } else {
+      print("Failed to load courses: ${response.statusCode}");
+    }
+  }
+
+  List<String> _dropdownItems2 = [
+    'Slides',
+    'Notes',
+    'Practice',
+    'Past Exam',
+    'Links',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Image Center Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text("File your Material"),
+          backgroundColor: Colors.blue,
+        ),
+        body: Container(
+          padding: EdgeInsets.all(20),
+          child: FutureBuilder(
+            future: _fetchCoursesFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error loading courses'));
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: CircleAvatar(
+                        radius: 50.0,
+                        backgroundColor: Colors.blue,
+                        child: Icon(
+                          Icons.upload_file,
+                          size: 60,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    _buildTextField(
+                      controller: textController1,
+                      labelText: 'Title',
+                      hintText: 'Please enter the title',
+                      prefixIcon: Icons.text_fields,
+                    ),
+                    SizedBox(height: 20),
+                    _buildTextField(
+                      controller: textController2,
+                      labelText: 'URL',
+                      hintText: 'Please enter the URL of the material',
+                      prefixIcon: Icons.link,
+                    ),
+                    SizedBox(height: 20),
+                    _buildDropdown(
+                      label: 'Select a type of material',
+                      value: _selectedItem2,
+                      items: _dropdownItems2,
+                      onChanged: (String? selectedItem) {
+                        setState(() {
+                          _selectedItem2 = selectedItem!;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    _buildDropdown(
+                      label: 'Select a course',
+                      value: _selectedItem,
+                      items: _dropdownItems,
+                      onChanged: (String? selectedItem) {
+                        setState(() {
+                          _selectedItem = selectedItem!;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        String textFieldValue1 = textController1.text;
+                        String textFieldValue2 = textController2.text;
+                        print('Text Field 1: $textFieldValue1');
+                        print('Text Field 2: $textFieldValue2');
+                        print('Selected Option 1: $_selectedItem');
+                        print('Selected Option 2: $_selectedItem2');
+                      },
+                      child: Text('Save'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.blue,
+                        onPrimary: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        textStyle: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+        ),
       ),
-      home: const ImageCenterPage(),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    required String hintText,
+    required IconData prefixIcon,
+  }) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        hintText: hintText,
+        prefixIcon: Icon(prefixIcon),
+        suffixIcon: Icon(Icons.check_circle),
+        border: OutlineInputBorder(),
+      ),
+    );
+  }
+
+  Widget _buildDropdown({
+    required String label,
+    required String value,
+    required List<String> items,
+    required void Function(String?) onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        SizedBox(height: 8),
+        DropdownButton<String>(
+          value: value,
+          items: items.map((String item) {
+            return DropdownMenuItem<String>(
+              value: item,
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Text(item),
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
+          style: TextStyle(color: Colors.black, fontSize: 16),
+          icon: Icon(Icons.arrow_drop_down),
+          isExpanded: true,
+          underline: Container(
+            height: 2,
+            color: Colors.blue,
+          ),
+        ),
+      ],
     );
   }
 }
 
-class ImageCenterPage extends StatelessWidget {
-  const ImageCenterPage({super.key});
+class CourseData {
+  final int id;
+  final String title;
+  final String courseCode;
+  final String? image;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(83, 163, 250, 1),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'Welcome!',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Are you ready to learn?',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 48),
-              Container(
-                width: 250, // Set the width of the container
-                height: 250, // Set the height of the container
-                decoration: const BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Color.fromRGBO(83, 163, 250, 1),
-                ),
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/317.jpg', // Replace with the path to your image asset
-                    width: 362, // Set the width of the image
-                    height: 257, // Set the height of the image
-                  ),
-                ),
-              ),
-              const SizedBox(height: 48),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          Login(), // Replace NextPage with your desired page
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: const Color(0xffffffff),
-                  onPrimary: const Color(0xff178ce0),
-                  padding: const EdgeInsets.fromLTRB(50, 15, 50, 15),
-                ),
-                child: const Text('Sign In'),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          Register(), // Replace NextPage with your desired page
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: const Color.fromRGBO(0, 109, 238, 1),
-                  onPrimary: Colors.white,
-                  padding: const EdgeInsets.all(16),
-                ),
-                child: const Text('Create an account'),
-              ),
-            ],
-          ),
-        ),
-      ),
+  CourseData({
+    required this.id,
+    required this.title,
+    required this.courseCode,
+    this.image,
+  });
+
+  factory CourseData.fromJson(Map<String, dynamic> json) {
+    return CourseData(
+      id: json['id'],
+      title: json['title'],
+      courseCode: json['courseCode'],
+      image: json['image'],
     );
   }
 }
