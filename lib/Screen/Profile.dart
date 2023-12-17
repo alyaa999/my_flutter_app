@@ -27,8 +27,8 @@ class CourseDetails {
 
   factory CourseDetails.fromJson(Map<String, dynamic> json) {
     return CourseDetails(
-      levelId: json['level'],
-      departmentId: json['department'],
+      levelId: json['levelId'],
+      departmentId: json['departmentId'],
       description: json['description'],
       title: json['title'],
       courseCode: json['courseCode'],
@@ -121,12 +121,19 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String department = "";
+    if (course.departmentId == 1) {
+      department = "General";
+    } else if (course.departmentId == 2) {
+      department = "Computer Science";
+    } else if (course.departmentId == 3) {
+      department = "Information Technology";
+    }
     return Card(
       margin: EdgeInsets.only(bottom: 16.0),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+        borderRadius: BorderRadius.circular(12.0),
       ),
-      elevation: 4.0,
       color: Colors.grey[200],
       child: InkWell(
         onTap: () {
@@ -173,7 +180,7 @@ class CourseCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      course.description,
+                      department,
                       maxLines: 2, // Limit description to 2 lines
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -338,11 +345,11 @@ class ProfilePage extends StatelessWidget {
           children: [
             _buildProfileSection(
                 'E-mail', student.email ?? 'No email available'),
-            _buildProfileSection('Bio', student.bio ?? 'No bio available'),
+            _buildProfileSection('Bio', student.bio ?? 'SoftWare Engineer'),
             _buildProfileSection(
                 'Level',
                 student.level.toString() == 'null'
-                    ? 'No level available'
+                    ? 'Level 4'
                     : student.level.toString()),
 
             // Add more profile sections as needed

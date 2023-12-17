@@ -31,14 +31,25 @@ class _UploadState extends State<Upload> {
 
   Future<void> _createMaterial() async {
     final String apiUrl = "https://localhost:7176/api/Material/Create";
-
+    String type = '';
+    if (_selectedItem2 == 'Slides') {
+      type = '0';
+    } else if (_selectedItem2 == 'Notes') {
+      type = '1';
+    } else if (_selectedItem2 == 'Practice') {
+      type = '2';
+    } else if (_selectedItem2 == 'Past Exam') {
+      type = '3';
+    } else if (_selectedItem2 == 'Links') {
+      type = '4';
+    }
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'course': _selectedItem,
         'url': textController2.text,
-        'type': '1',
+        'type': type,
         'username': widget.username,
         'title': textController1.text,
       }),

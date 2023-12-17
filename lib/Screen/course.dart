@@ -290,6 +290,7 @@ class _CourseState extends State<Course> {
                         );
                       },
                       child: Card(
+                        elevation: 10.0,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
@@ -298,8 +299,8 @@ class _CourseState extends State<Course> {
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset(
                                   'assets/images/sticky-note.png',
-                                  width: 80,
-                                  height: 80,
+                                  width: 60,
+                                  height: 60,
                                 ),
                               ),
                               SizedBox(width: 10),
@@ -360,6 +361,7 @@ class _CourseState extends State<Course> {
                         );
                       },
                       child: Card(
+                        elevation: 10.0,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
@@ -368,8 +370,8 @@ class _CourseState extends State<Course> {
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset(
                                   'assets/images/edit.png',
-                                  width: 80,
-                                  height: 80,
+                                  width: 60,
+                                  height: 60,
                                 ),
                               ),
                               SizedBox(width: 10),
@@ -429,6 +431,7 @@ class _CourseState extends State<Course> {
                         );
                       },
                       child: Card(
+                        elevation: 10.0,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
@@ -437,8 +440,8 @@ class _CourseState extends State<Course> {
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset(
                                   'assets/images/books.png',
-                                  width: 80,
-                                  height: 80,
+                                  width: 60,
+                                  height: 60,
                                 ),
                               ),
                               SizedBox(width: 10),
@@ -498,6 +501,7 @@ class _CourseState extends State<Course> {
                         );
                       },
                       child: Card(
+                        elevation: 10.0,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
@@ -506,8 +510,8 @@ class _CourseState extends State<Course> {
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset(
                                   'assets/images/file.png',
-                                  width: 80,
-                                  height: 80,
+                                  width: 60,
+                                  height: 60,
                                 ),
                               ),
                               SizedBox(width: 10),
@@ -567,6 +571,8 @@ class _CourseState extends State<Course> {
                         );
                       },
                       child: Card(
+                        margin: EdgeInsets.only(bottom: 16.0),
+                        elevation: 10.0,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
@@ -575,8 +581,8 @@ class _CourseState extends State<Course> {
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset(
                                   'assets/images/glasses.png',
-                                  width: 80,
-                                  height: 80,
+                                  width: 60,
+                                  height: 60,
                                 ),
                               ),
                               SizedBox(width: 10),
@@ -654,7 +660,7 @@ class _CourseState extends State<Course> {
                           ));
                         },
                         icon: const Icon(Icons.upload_file)),
-                    label: 'Profile',
+                    label: 'Upload File',
                   ),
                 ],
               ),
