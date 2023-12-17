@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_flutter_app/Screen/HomePage.dart';
+import 'package:my_flutter_app/Screen/MaterialUpload.dart';
 import 'package:my_flutter_app/Screen/Profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -103,6 +104,17 @@ class _FileListScreenState extends State<FileListScreen> {
               icon: const Icon(Icons.person_outline),
             ),
             label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Upload(username: widget.username),
+                ));
+              },
+              icon: const Icon(Icons.upload_file),
+            ),
+            label: 'Upload File',
           ),
         ],
       ),

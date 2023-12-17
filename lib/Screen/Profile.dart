@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:my_flutter_app/Screen/HomePage.dart';
+import 'package:my_flutter_app/Screen/MaterialUpload.dart';
 import 'package:my_flutter_app/Screen/course.dart';
 
 class CourseDetails {
@@ -283,6 +284,17 @@ class ProfilePage extends StatelessWidget {
                             },
                             icon: const Icon(Icons.person_outline)),
                         label: 'Profile',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    Upload(username: studentUsername),
+                              ));
+                            },
+                            icon: const Icon(Icons.upload_file)),
+                        label: 'Upload File',
                       ),
                     ],
                   ),

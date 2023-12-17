@@ -644,6 +644,18 @@ class _CourseState extends State<Course> {
                         icon: const Icon(Icons.person_outline)),
                     label: 'Profile',
                   ),
+                  BottomNavigationBarItem(
+                    icon: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Upload(
+                              username: widget.username,
+                            ),
+                          ));
+                        },
+                        icon: const Icon(Icons.upload_file)),
+                    label: 'Profile',
+                  ),
                 ],
               ),
             ],

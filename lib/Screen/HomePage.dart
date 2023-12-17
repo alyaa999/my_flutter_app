@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_flutter_app/Screen/Course.dart';
+import 'package:my_flutter_app/Screen/MaterialUpload.dart';
 import 'package:my_flutter_app/Screen/Profile.dart';
 
 class Home extends StatefulWidget {
@@ -356,6 +357,16 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
                         },
                         icon: const Icon(Icons.person_outline)),
                     label: 'Profile',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  Upload(username: username)));
+                        },
+                        icon: const Icon(Icons.upload)),
+                    label: 'Upload File',
                   ),
                 ],
               ),

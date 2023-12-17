@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_flutter_app/Screen/HomePage.dart';
 import 'package:my_flutter_app/Screen/Profile.dart';
 
 class Upload extends StatefulWidget {
@@ -189,6 +190,26 @@ class _UploadState extends State<Upload> {
                       child: Text('Save'),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.blue,
+                        onPrimary: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        textStyle: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => Home(
+                              username: widget.username,
+                              token: '',
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text('Cancel'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
                         onPrimary: Colors.white,
                         padding: EdgeInsets.symmetric(vertical: 15),
                         textStyle: TextStyle(fontSize: 18),
