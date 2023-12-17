@@ -27,6 +27,49 @@ class _UploadState extends State<Upload> {
     _fetchCoursesFuture = _fetchAllCourses();
   }
 
+  Future<void> _createMaterial() async {
+    final String apiUrl = "https://localhost:7176/api/Material/Create";
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'course': _selectedItem,
+        'url': textController2.text,
+        'type': '1',
+        'username': widget.username,
+        'title': textController1.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Material created successfully');
+    } else {
+      final errorMessage = response.body ?? 'Unknown error';
+      print('Failed to create material. Status code: ${response.statusCode}');
+      print('Error message: $errorMessage');
+
+      // Display an error message to the user using AlertDialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Material Creation Failed'),
+            content: Text('$errorMessage, Please try again later.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   Future<void> _fetchAllCourses() async {
     final String apiUrl =
         "https://localhost:7176/api/Course/GetAll"; // Replace with your actual API endpoint
@@ -126,6 +169,9 @@ class _UploadState extends State<Upload> {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
+                        onPressed:
+                        _createMaterial();
+
                         String textFieldValue1 = textController1.text;
                         String textFieldValue2 = textController2.text;
                         print('Text Field 1: $textFieldValue1');
