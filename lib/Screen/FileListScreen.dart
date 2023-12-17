@@ -1,13 +1,21 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_flutter_app/Screen/HomePage.dart';
+import 'package:my_flutter_app/Screen/Profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FileListScreen extends StatefulWidget {
   final int courseId;
   final int type;
+  final String username;
 
-  FileListScreen({required this.courseId, required this.type});
+  FileListScreen({
+    required this.courseId,
+    required this.type,
+    required this.username,
+  });
 
   @override
   _FileListScreenState createState() => _FileListScreenState();
@@ -69,7 +77,42 @@ class _FileListScreenState extends State<FileListScreen> {
           );
         },
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: _onTabTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      Home(username: widget.username, token: ''),
+                ));
+              },
+              icon: const Icon(Icons.home),
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      ProfilePage(studentUsername: widget.username),
+                ));
+              },
+              icon: const Icon(Icons.person_outline),
+            ),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
+  }
+
+  // Function to handle BottomNavigationBar item taps
+  void _onTabTapped(int index) {
+    // You can implement specific actions for each tab if needed
+    print('Tab $index tapped');
   }
 }
 
@@ -107,19 +150,28 @@ class FileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(Icons.insert_drive_file), // Change icon based on file type
-      title: Text(name),
-      subtitle: Text(time),
-      trailing: Icon(Icons.more_vert),
-      onTap: () {
-        _launchURL(url);
-      },
+    return Card(
+      margin: EdgeInsets.all(8.0),
+      elevation: 4.0,
+      child: ListTile(
+        leading: Icon(Icons.insert_drive_file, color: Colors.blue),
+        title: Text(
+          name,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(time),
+        trailing: IconButton(
+          icon: Icon(Icons.open_in_browser),
+          onPressed: () {
+            _launchURL(url);
+          },
+        ),
+      ),
     );
   }
 
   // Function to launch the URL
-  _launchURL(String url) async {
+  void _launchURL(String url) async {
     try {
       if (await canLaunch(url)) {
         await launch(url);

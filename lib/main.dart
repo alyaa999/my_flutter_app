@@ -21,10 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FileListScreen(
-        courseId: 4,
-        type: 2,
-      ),
+      home: Login(),
       routes: {
         '/login': (context) => Login(),
         '/homepage': (contsext) => Home(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/Screen/FileListScreen.dart';
 import 'package:my_flutter_app/Screen/HomePage.dart';
 import 'package:my_flutter_app/Screen/MaterialUpload.dart';
 import 'dart:convert';
@@ -282,9 +283,10 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Upload(
-                                    username: '',
-                                  )),
+                              builder: (context) => FileListScreen(
+                                  courseId: course.id,
+                                  type: 0,
+                                  username: widget.username)),
                         );
                       },
                       child: Card(
@@ -351,9 +353,10 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Upload(
-                                    username: '',
-                                  )),
+                              builder: (context) => FileListScreen(
+                                  courseId: course.id,
+                                  type: 1,
+                                  username: widget.username)),
                         );
                       },
                       child: Card(
@@ -419,9 +422,10 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Upload(
-                                    username: '',
-                                  )),
+                              builder: (context) => FileListScreen(
+                                  courseId: course.id,
+                                  type: 2,
+                                  username: widget.username)),
                         );
                       },
                       child: Card(
@@ -487,9 +491,10 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Upload(
-                                    username: '',
-                                  )),
+                              builder: (context) => FileListScreen(
+                                  courseId: course.id,
+                                  type: 3,
+                                  username: widget.username)),
                         );
                       },
                       child: Card(
@@ -555,9 +560,10 @@ class _CourseState extends State<Course> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Upload(
-                                    username: '',
-                                  )),
+                              builder: (context) => FileListScreen(
+                                  courseId: course.id,
+                                  type: 4,
+                                  username: widget.username)),
                         );
                       },
                       child: Card(
