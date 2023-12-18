@@ -86,7 +86,7 @@ class _UploadState extends State<Upload> {
 
   Future<void> _fetchAllCourses() async {
     final String apiUrl =
-        "https://localhost:7176/api/Course/GetAll"; // Replace with your actual API endpoint
+        "https://zytoona.azurewebsites.net/api/Course/GetAll"; // Replace with your actual API endpoint
     var token;
     final response = await http.get(
       Uri.parse(apiUrl),
