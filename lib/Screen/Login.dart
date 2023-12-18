@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // API endpoint for authentication
   static const String authApiUrl =
-      "https://localhost:7176/api/Account/Login"; // Replace with your actual API endpoint
+      "https://zytoona.azurewebsites.net/api/Account/Login"; // Replace with your actual API endpoint
 
   Future<void> _signIn() async {
     final String Username = UsernameController.text;

@@ -36,7 +36,7 @@ class _FileListScreenState extends State<FileListScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-          "https://localhost:7176/api/Material/ViewSpecificMaterialsType?courseId=${widget.courseId}&type=${widget.type}",
+          "https://zytoona.azurewebsites.net/api/Material/ViewSpecificMaterialsType?courseId=${widget.courseId}&type=${widget.type}",
         ),
         // Replace "https://your-api-url" with the actual URL of your API
       );

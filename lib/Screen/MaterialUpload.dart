@@ -30,7 +30,8 @@ class _UploadState extends State<Upload> {
   }
 
   Future<void> _createMaterial() async {
-    final String apiUrl = "https://localhost:7176/api/Material/Create";
+    final String apiUrl =
+        "https://zytoona.azurewebsites.net/api/Material/Create";
     String type = '';
     if (_selectedItem2 == 'Slides') {
       type = '0';

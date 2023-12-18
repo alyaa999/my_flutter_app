@@ -200,7 +200,7 @@ class CourseCard extends StatelessWidget {
 
 class ProfilePage extends StatelessWidget {
   final String apiUrl =
-      'https://localhost:7176/api/Student/ViewProfile?username'; // Replace with your API endpoint
+      'https://zytoona.azurewebsites.net/api/Student/ViewProfile?username'; // Replace with your API endpoint
   final String studentUsername;
 
   ProfilePage({required this.studentUsername});

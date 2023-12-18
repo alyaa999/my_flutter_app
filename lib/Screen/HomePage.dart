@@ -44,7 +44,7 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
 
   Future<void> _fetchAllCourses() async {
     final String apiUrl =
-        "https://localhost:7176/api/Course/GetAll"; // Replace with your actual API endpoint
+        "https://zytoona.azurewebsites.net/api/Course/GetAll"; // Replace with your actual API endpoint
     final response = await http.get(
       Uri.parse(apiUrl),
       headers: {'Authorization': 'Bearer $token'},
@@ -63,7 +63,7 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
   Future<void> _fetchCoursesByDepartment(int department) async {
     try {
       final String apiUrl =
-          "https://localhost:7176/api/Course/FilterByDeptarment?department=$department";
+          "https://zytoona.azurewebsites.net/api/Course/FilterByDeptarment?department=$department";
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {'Authorization': 'Bearer $token'},
@@ -86,7 +86,7 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
   Future<void> _fetchCoursesByLevel(int level) async {
     try {
       final String apiUrl =
-          "https://localhost:7176/api/Course/FilterByLevel?level=$level";
+          "https://zytoona.azurewebsites.net/api/Course/FilterByLevel?level=$level";
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {'Authorization': 'Bearer $token'},
@@ -109,7 +109,7 @@ class _Homestate extends State<Home> with SingleTickerProviderStateMixin {
   Future<void> _searchCourses(String searchTerm) async {
     try {
       final String apiUrl =
-          "https://localhost:7176/api/Course/Search?title=$searchTerm";
+          "https://zytoona.azurewebsites.net/api/Course/Search?title=$searchTerm";
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {'Authorization': 'Bearer $token'},

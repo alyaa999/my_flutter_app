@@ -21,10 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Course(
-        Id: 3,
-        username: 'alyaa999',
-      ),
+      home: Register(),
       routes: {
         '/login': (context) => Login(),
         '/homepage': (contsext) => Home(

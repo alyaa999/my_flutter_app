@@ -44,7 +44,8 @@ class _CourseState extends State<Course> {
 
   Future<void> _fetchCoursesById(int id) async {
     try {
-      final String apiUrl = "https://localhost:7176/api/Course/Get?id=$id";
+      final String apiUrl =
+          "https://zytoona.azurewebsites.net/api/Course/Get?id=$id";
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {'Authorization': 'Bearer YOUR_TOKEN_HERE'},
@@ -67,7 +68,7 @@ class _CourseState extends State<Course> {
   Future<void> _clickOnFavourite(int id, String username) async {
     try {
       final String apiUrl =
-          "https://localhost:7176/api/Student/ClickOnEnroll?userName=$username&courseId=$id";
+          "https://zytoona.azurewebsites.net/api/Student/ClickOnEnroll?userName=$username&courseId=$id";
 
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -91,7 +92,7 @@ class _CourseState extends State<Course> {
   Future<void> _IsFavourite(int id, String username) async {
     try {
       final String apiUrl =
-          "https://localhost:7176/api/Student/IsFavourite?userName=$username&courseId=$id";
+          "https://zytoona.azurewebsites.net/api/Student/IsFavourite?userName=$username&courseId=$id";
 
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -118,7 +119,7 @@ class _CourseState extends State<Course> {
   Future<void> _fetchMaterialsNumbers(int id) async {
     try {
       final String apiUrl =
-          "https://localhost:7176/api/Course/CountMaterialOfCourse?id=$id";
+          "https://zytoona.azurewebsites.net/api/Course/CountMaterialOfCourse?id=$id";
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {'Authorization': 'Bearer YOUR_TOKEN_HERE'},

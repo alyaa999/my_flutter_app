@@ -68,7 +68,8 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Future<void> _register() async {
-    final String apiUrl = "https://localhost:7176/api/Account/Register";
+    final String apiUrl =
+        "https://zytoona.azurewebsites.net/api/Account/Register";
     int selectedValueLevel = 1;
     int selectedValueDepartment = 0;
     if (selectedValue == 'Level1') {
